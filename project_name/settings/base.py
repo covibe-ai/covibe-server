@@ -60,10 +60,15 @@ INSTALLED_APPS = [
     'django_celery_results',
     'django_celery_beat',
     'simple_history',
+    'import_export',
 
     # 项目模块
     'project_name.apps.ProjectNameConfig',
     'asset',
+    'system.apps.SystemConfig',
+    'account.apps.AccountConfig',
+    'order.apps.OrderConfig',
+    'wechat.apps.WechatConfig',
 ]
 
 MIDDLEWARE = [

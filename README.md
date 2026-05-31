@@ -673,6 +673,144 @@ class Image(S3FileMixin):
 
 ---
 
+### M11 · 系统日志（system）
+
+**官方默认**
+
+- 无结构化业务日志落库；通常只用 Python logging。
+
+**本模板改动**
+
+- `system.models.Log`：独立事务写入（`system.log.Log` 门面），按模块/级别检索。
+- Admin 列表优化（InfinitePaginator、content 延迟加载）。
+
+**涉及文件**
+
+- `system/models.py`、`system/log.py`、`system/admin.py`
+
+**依赖**
+
+- 模块：M5 BaseModel
+- 被 M12/M14 支付链路用于错误追踪
+
+**单独接入**
+
+1. 复制 `system/` app，加入 `INSTALLED_APPS`。
+2. `migrate` 后可在任意代码中 `Log.error("标题", "内容", LogModel.Module.ORDER)`。
+
+**移除**
+
+- 从 `INSTALLED_APPS` 去掉 `system`；支付模块需改 `wechat/api.py` 等处 logging 策略。
+
+---
+
+### M12 · 订单与支付抽象（order）
+
+**官方默认**
+
+- 无统一订单/支付平台抽象。
+
+**本模板改动**
+
+- `Order` / `OrderItem` / `Refund` 状态机。
+- `PaymentPlatformOrder` 抽象类；`Order.platform_order` 懒加载微信实现。
+- DRF `OrderViewSet`：`wechat_prepay`、`check_payment`。
+- Celery `auto_close_expired_orders`（超时关单，依赖 M7 Beat）。
+
+**涉及文件**
+
+- `order/models.py`、`order/views.py`、`order/serializers.py`、`order/tasks.py`、`order/admin.py`
+
+**依赖**
+
+- M5 BaseModel、M6 DRF、M7 Celery Beat、M11 system
+- M14 wechat 提供具体 `WechatOrder`
+
+**API 端点**
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/api/v1/orders/` | 创建订单 |
+| POST | `/api/v1/orders/{uuid}/pay/wechat/prepay/` | 微信预下单 |
+| POST | `/api/v1/orders/{uuid}/check_payment/` | 主动查单 |
+
+**移除**
+
+- 删 `order/` app；同时需移除 M14 或改写 `platform_order` 钩子。
+
+---
+
+### M13 · 微信用户（account · WeixinUser）
+
+**官方默认**
+
+- 无 OpenID 绑定模型。
+
+**本模板改动**
+
+- `WeixinUser`：存 `openid`，JSAPI 预下单时从 `request.user` 读取。
+
+**涉及文件**
+
+- `account/models.py`、`account/admin.py`
+
+**依赖**
+
+- M5 BaseModel
+- M12/M14 JSAPI 场景必需；Native 支付可不启用
+
+**移除**
+
+- 删 `account` app；JSAPI 预下单需自行提供 openid 来源。
+
+---
+
+### M14 · 微信支付 V3（wechat）
+
+**官方默认**
+
+- 无微信支付集成。
+
+**本模板改动**（与 `free3dkit-backend` 对齐）
+
+| 能力 | 实现 |
+|------|------|
+| JSAPI / Native 预下单 | `WechatOrder.create_prepay()` |
+| 支付回调 | `POST /api/v1/payments/wechat/pay/notify/` |
+| 退款 API | `WechatAPI.create_refund()` |
+| 退款回调 | `POST /api/v1/payments/wechat/refund/notify/`（验签解密，业务流待扩展） |
+| 主动查单 / 关单 | `query_and_sync_pay_result()` / `close_pay_transaction()` |
+| Admin | 查单、重新预下单、Native 二维码 JS |
+
+**涉及文件**
+
+- `wechat/models.py`、`wechat/api.py`、`wechat/views.py`、`wechat/urls.py`、`wechat/admin.py`
+- `wechat/static/wechat/js/wechatorder_change_native_qr.js`
+- `docs/payment_wechat.md`
+
+**Constance 配置**（M8）
+
+- `WECHAT_PAY_*` 全套密钥与回调 URL；详见 `settings/constance.py`。
+
+**依赖**
+
+- PyPI：`cryptography`、`requests`
+- 模块：M5、M8、M11、M12；JSAPI 另需 M13
+- 外部：微信商户平台 APIv3
+
+**单独接入**
+
+1. 复制 `wechat/` + 依赖的 M11/M12（及可选 M13）。
+2. `api_urls.py` 加 `path('payments/wechat/', include('wechat.urls'))`。
+3. 在 Constance 填写商户号、证书、V3 密钥。
+4. 配置 `BASE_URL` 供回调 URL 自动拼接。
+
+**移除**
+
+- 删 `wechat` app 及 `api_urls` 中 payments 路由；`order.models.platform_order` 改回 `None`。
+
+---
+
 ## 组合示例
 
 ### 只要现代化 Admin
@@ -691,13 +829,21 @@ M0 + M1 + M2 (ASGI) + M6 (DRF/JWT)
 
 去掉 M3/M4/M9；`INSTALLED_APPS` 中可移除 `unfold*`。
 
-### 全栈后台 + 任务队列
+### 微信支付全栈
 
 ```
-M0 ~ M10 全部
+M0 + M1 + M4 + M5 + M6 + M7 + M8 + M11 + M12 + M14
 ```
 
-与当前模板一致。
+JSAPI 另加 M13（WeixinUser）。
+
+### 全栈后台 + 任务队列 + 支付
+
+```
+M0 ~ M14 全部
+```
+
+与当前模板默认一致。
 
 ### 在已有 Django 项目里加一个能力
 
@@ -728,6 +874,9 @@ M0 ~ M10 全部
 | 静态资源 | 无自定义 | jQuery、Flatpickr、Tailwind |
 | 国际化 | `en-us` | `zh-hans` + `Asia/Shanghai` |
 | 部署 | 无 | Docker（Nginx + Daphne） |
+| 微信支付 | 无 | 微信 APIv3（JSAPI/Native/退款 API） |
+| 订单 | 无 | Order + PaymentPlatformOrder 抽象 |
+| 业务日志 | 无 | system.Log 独立事务落库 |
 
 ---
 

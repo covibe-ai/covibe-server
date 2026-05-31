@@ -62,7 +62,7 @@ if [ "$1" = "celery" ]; then
             celery -A project_name flower -l INFO --port=8081
     elif [ "$2" = "worker" ]; then
         run_celery_logfile_and_console /app/logs/celery/worker.log \
-            celery -A project_name worker --loglevel=INFO --pool=gevent -Q default \
+            celery -A project_name worker --loglevel=INFO --pool=prefork -Q default \
             --concurrency=$CONCURRENCY --max-tasks-per-child=100 --max-memory-per-child=512000 \
             -n worker@%h
     else

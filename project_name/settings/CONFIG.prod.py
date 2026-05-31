@@ -54,6 +54,18 @@ if (get_env('CSRF_TRUSTED_ORIGINS', '') != '') or (get_env('ALLOWED_HOSTS', '') 
 if get_env('CORS_ALLOWED_ORIGINS', '') != '':
     CORS_ALLOWED_ORIGINS = get_env('CORS_ALLOWED_ORIGINS', '').split(',')
 CORS_ALLOW_ALL_ORIGINS = get_env('CORS_ALLOW_ALL_ORIGINS', '').lower() == 'true'
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
 
 # OSS 配置（可选）
 OSS_ENABLED = False

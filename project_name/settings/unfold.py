@@ -92,11 +92,48 @@ UNFOLD = {
                 ],
             },
             {
+                "title": _("订单与支付"),
+                "separator": True,
+                "collapsible": True,
+                "items": [
+                    {
+                        "title": _("订单"),
+                        "icon": "receipt_long",
+                        "link": reverse_lazy("admin:order_order_changelist"),
+                    },
+                    {
+                        "title": _("微信用户"),
+                        "icon": "chat",
+                        "link": reverse_lazy("admin:account_weixinuser_changelist"),
+                    },
+                    {
+                        "title": _("微信支付订单"),
+                        "icon": "payments",
+                        "link": reverse_lazy("admin:wechat_wechatorder_changelist"),
+                    },
+                    {
+                        "title": _("微信支付单"),
+                        "icon": "paid",
+                        "link": reverse_lazy("admin:wechat_wechatpaytransaction_changelist"),
+                    },
+                    {
+                        "title": _("微信退款记录"),
+                        "icon": "undo",
+                        "link": reverse_lazy("admin:wechat_wechatpayrefund_changelist"),
+                    },
+                ],
+            },
+            {
                 "title": _("系统"),
                 "separator": True,
                 "collapsible": True,
                 "collapsed": True,
                 "items": [
+                    {
+                        "title": _("系统日志"),
+                        "icon": "article",
+                        "link": reverse_lazy("admin:system_log_changelist"),
+                    },
                     {
                         "title": _("调试令牌"),
                         "icon": "bug_report",

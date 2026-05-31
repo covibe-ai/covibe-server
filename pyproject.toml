@@ -25,6 +25,9 @@ dependencies = [
     "shortuuid>=1.0.13",
     "drf-nested-routers>=0.95.0",
     "django-oss-storage>=1.1.1",
+    "django-import-export>=4.3.12",
+    "cryptography>=43.0.0",
+    "requests>=2.32.5",
     "gunicorn>=21.2.0",
     "gevent>=24.2.1",
     "psycopg>=3.2.9",
@@ -40,7 +43,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["project_name", "asset"]
+packages = ["project_name", "asset", "account", "order", "system", "wechat"]
 
 [tool.hatch.build.targets.wheel.force-include]
 "project_name/static" = "project_name/static"
