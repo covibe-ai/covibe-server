@@ -14,9 +14,9 @@ def _patch_model_verbose(app_label: str, model_name: str, verbose_name, verbose_
     model._meta.verbose_name_plural = verbose_name_plural
 
 
-class ProjectNameConfig(AppConfig):
+class CovibeServerConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'project_name'
+    name = 'covibe_server'
 
     def ready(self) -> None:
         _patch_model_verbose('auth', 'group', _('用户组'), _('用户组'))

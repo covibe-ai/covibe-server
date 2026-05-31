@@ -1,5 +1,5 @@
 """
-ASGI config for project_name project.
+ASGI config for covibe_server project.
 
 It exposes the ASGI callable as a module-level variable named ``application``.
 
@@ -11,7 +11,7 @@ import os
 
 from django.core.asgi import get_asgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'project_name.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'covibe_server.settings')
 
 # 启用异步支持
 django_asgi_app = get_asgi_application()

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from project_name.admin import BaseModelAdmin
+from covibe_server.admin import BaseModelAdmin
 
 from .models import WeixinUser
 

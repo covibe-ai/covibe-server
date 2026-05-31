@@ -21,39 +21,29 @@ def get_env(env_name, default):
 
 BASE_URL = get_env('BASE_URL', 'http://localhost:8000')
 
-CELERY_BROKER_URL = get_env('CELERY_BROKER_URL', 'redis://localhost:6379/0')
-CELERY_RESULT_BACKEND = get_env('CELERY_RESULT_BACKEND', 'redis://localhost:6379/0')
+CELERY_BROKER_URL = get_env('CELERY_BROKER_URL', 'redis://localhost:6379/20')
+CELERY_RESULT_BACKEND = 'django-db'  # 使用数据库存储任务结果
 
-# PostgreSQL Configuration
 DATABASES = {}
-if all(get_env(key, '') != '' for key in ['POSTGRES_HOST', 'POSTGRES_PORT', 'POSTGRES_DB', 'POSTGRES_USER', 'POSTGRES_PASSWORD']):
-    DATABASES['default'] = {
-        'ENGINE': 'django.db.backends.postgresql',
-        'HOST': get_env('POSTGRES_HOST', 'localhost'),
-        'PORT': get_env('POSTGRES_PORT', '5432'),
-        'NAME': get_env('POSTGRES_DB', 'polarhub'),
-        'USER': get_env('POSTGRES_USER', 'user'),
-        'PASSWORD': get_env('POSTGRES_PASSWORD', 'password'),
-    }
-
+DATABASES['default'] = {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': BASE_DIR / 'db.sqlite3',
+}
 
 CACHES = {
     'default': {
         'BACKEND': 'django.core.cache.backends.redis.RedisCache',
-        'LOCATION': get_env('CACHE_REDIS_URL', 'redis://localhost:6379/1'),
+        'LOCATION': get_env('CACHE_REDIS_URL', 'redis://localhost:6379/21'),
     }
 }
 
-DEBUG = get_env('DEBUG', '').lower() == 'true'
+DEBUG = True
 
 if get_env('ALLOWED_HOSTS', '') != '':
     ALLOWED_HOSTS = get_env('ALLOWED_HOSTS', '').split(',')
-if (get_env('CSRF_TRUSTED_ORIGINS', '') != '') or (get_env('ALLOWED_HOSTS', '') != ''):
-    CSRF_TRUSTED_ORIGINS = get_env('CSRF_TRUSTED_ORIGINS', get_env('ALLOWED_HOSTS', '')).split(',')
-
 if get_env('CORS_ALLOWED_ORIGINS', '') != '':
     CORS_ALLOWED_ORIGINS = get_env('CORS_ALLOWED_ORIGINS', '').split(',')
-CORS_ALLOW_ALL_ORIGINS = get_env('CORS_ALLOW_ALL_ORIGINS', '').lower() == 'true'
+CORS_ALLOW_ALL_ORIGINS = get_env('CORS_ALLOW_ALL_ORIGINS', 'true').lower() == 'true'
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_HEADERS = [
     'accept',
@@ -67,6 +57,8 @@ CORS_ALLOW_HEADERS = [
     'x-requested-with',
 ]
 
+CSRF_TRUSTED_ORIGINS = get_env('CSRF_TRUSTED_ORIGINS', 'http://127.0.0.1:5173,http://localhost:5173').split(',')
+
 # OSS 配置（可选）
 OSS_ENABLED = False
 OSS_BUCKET_NAME = get_env('OSS_BUCKET_NAME', None)
@@ -79,7 +71,7 @@ if OSS_BUCKET_NAME:
     OSS_ENABLED = True
     STORAGES = {
         "default": {
-            "BACKEND": "project_name.storages.MyOssMediaStorage",
+            "BACKEND": "covibe_server.storages.MyOssMediaStorage",
         },
         "staticfiles": {
             "BACKEND": "django.contrib.staticfiles.storage.ManifestStaticFilesStorage",

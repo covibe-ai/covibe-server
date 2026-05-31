@@ -7,7 +7,7 @@ from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from account.models import WeixinUser
-from project_name.admin import BaseModelAdmin
+from covibe_server.admin import BaseModelAdmin
 from order.models import Order
 from unfold.decorators import action
 

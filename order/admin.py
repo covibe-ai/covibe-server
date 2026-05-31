@@ -11,7 +11,7 @@ from unfold.contrib.filters.admin import (
     RangeDateTimeFilter,
 )
 
-from project_name.admin import BaseModelAdmin
+from covibe_server.admin import BaseModelAdmin
 
 from .models import Order, OrderItem, Refund
 

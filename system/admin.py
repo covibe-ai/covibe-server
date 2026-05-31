@@ -6,7 +6,7 @@ from unfold.contrib.filters.admin import ChoicesDropdownFilter, RangeDateTimeFil
 from unfold.paginator import InfinitePaginator
 from unfold.widgets import UnfoldAdminTextareaWidget
 
-from project_name.admin import BaseModelAdmin
+from covibe_server.admin import BaseModelAdmin
 
 from system.models import Log
 

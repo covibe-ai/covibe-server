@@ -1,7 +1,7 @@
 import os
 from django.db import models
 from django.core.files.storage import default_storage
-from project_name.models import BaseModel
+from covibe_server.models import BaseModel
 from django.conf import settings
 from urllib.parse import urljoin
 

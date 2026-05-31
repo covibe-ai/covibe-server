@@ -4,7 +4,7 @@ from constance import config
 from django.db import models
 from django.utils import timezone
 
-from project_name.models import BaseModel
+from covibe_server.models import BaseModel
 from order.models import Order, PaymentPlatformOrder
 
 

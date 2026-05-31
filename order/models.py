@@ -7,7 +7,7 @@ from django.db import models, transaction
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from project_name.models import BaseModel
+from covibe_server.models import BaseModel
 from system.log import Log
 from system.models import Log as LogModel
 
