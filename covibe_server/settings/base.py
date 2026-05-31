@@ -63,12 +63,13 @@ INSTALLED_APPS = [
     'import_export',
 
     # 项目模块
-    'covibe_server.apps.ProjectNameConfig',
+    'covibe_server.apps.CovibeServerConfig',
     'asset',
     'system.apps.SystemConfig',
     'account.apps.AccountConfig',
     'order.apps.OrderConfig',
     'wechat.apps.WechatConfig',
+    'member.apps.MemberConfig',
 ]
 
 MIDDLEWARE = [
@@ -152,4 +153,7 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# ---- 自定义用户模型 ----
+AUTH_USER_MODEL = 'account.User'
 

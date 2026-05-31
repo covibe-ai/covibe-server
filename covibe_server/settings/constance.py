@@ -44,6 +44,17 @@ CONSTANCE_CONFIG = {
     'WECHAT_PAY_REFUND_NOTIFY_URL': ('', _('退款回调 URL（留空则用 BASE_URL 自动拼接）'), str),
     'WECHAT_PAY_ORDER_BODY_PREFIX': ('DjangoStartupKit', _('微信支付商品描述前缀'), str),
     'WECHAT_PAY_NATIVE_EXPIRE_MINUTES': (15, _('Native 订单超时分钟数（自动关单）'), int),
+
+    # ---- 会员默认配额 ----
+    'DEFAULT_TIER_FREE_MAX_SESSIONS': (10, _('免费版默认最大会话数'), int),
+    'DEFAULT_TIER_FREE_MAX_WORKSPACES': (3, _('免费版默认最大工作区数'), int),
+    'DEFAULT_TIER_FREE_MAX_IDLE_MINUTES': (30, _('免费版默认最大空闲分钟数'), int),
+    'DEFAULT_TIER_PRO_MAX_SESSIONS': (50, _('Pro 版默认最大会话数'), int),
+    'DEFAULT_TIER_PRO_MAX_WORKSPACES': (10, _('Pro 版默认最大工作区数'), int),
+    'DEFAULT_TIER_PRO_MAX_IDLE_MINUTES': (120, _('Pro 版默认最大空闲分钟数'), int),
+    'DEFAULT_TIER_ENTERPRISE_MAX_SESSIONS': (200, _('企业版默认最大会话数'), int),
+    'DEFAULT_TIER_ENTERPRISE_MAX_WORKSPACES': (50, _('企业版默认最大工作区数'), int),
+    'DEFAULT_TIER_ENTERPRISE_MAX_IDLE_MINUTES': (1440, _('企业版默认最大空闲分钟数（1440 = 24 小时）'), int),
 }
 
 CONSTANCE_CONFIG_FIELDSETS = {
@@ -63,5 +74,16 @@ CONSTANCE_CONFIG_FIELDSETS = {
         'WECHAT_PAY_REFUND_NOTIFY_URL',
         'WECHAT_PAY_ORDER_BODY_PREFIX',
         'WECHAT_PAY_NATIVE_EXPIRE_MINUTES',
+    ),
+    '会员默认配额': (
+        'DEFAULT_TIER_FREE_MAX_SESSIONS',
+        'DEFAULT_TIER_FREE_MAX_WORKSPACES',
+        'DEFAULT_TIER_FREE_MAX_IDLE_MINUTES',
+        'DEFAULT_TIER_PRO_MAX_SESSIONS',
+        'DEFAULT_TIER_PRO_MAX_WORKSPACES',
+        'DEFAULT_TIER_PRO_MAX_IDLE_MINUTES',
+        'DEFAULT_TIER_ENTERPRISE_MAX_SESSIONS',
+        'DEFAULT_TIER_ENTERPRISE_MAX_WORKSPACES',
+        'DEFAULT_TIER_ENTERPRISE_MAX_IDLE_MINUTES',
     ),
 }

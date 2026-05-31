@@ -443,6 +443,73 @@ wheels = [
 ]
 
 [[package]]
+name = "covibe-server"
+version = "0.1.0"
+source = { editable = "." }
+dependencies = [
+    { name = "adrf" },
+    { name = "celery", extra = ["redis"] },
+    { name = "cryptography" },
+    { name = "daphne" },
+    { name = "django", version = "5.2.14", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version < '3.12'" },
+    { name = "django", version = "6.0.5", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "django-celery-beat" },
+    { name = "django-celery-results" },
+    { name = "django-constance", extra = ["redis"] },
+    { name = "django-cors-headers" },
+    { name = "django-filter" },
+    { name = "django-import-export" },
+    { name = "django-oss-storage" },
+    { name = "django-simple-history" },
+    { name = "django-unfold", version = "0.81.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version < '3.11'" },
+    { name = "django-unfold", version = "0.91.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version == '3.11.*'" },
+    { name = "django-unfold", version = "0.94.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version >= '3.12'" },
+    { name = "djangorestframework" },
+    { name = "djangorestframework-simplejwt" },
+    { name = "drf-nested-routers" },
+    { name = "flower" },
+    { name = "gevent" },
+    { name = "gunicorn" },
+    { name = "psycopg" },
+    { name = "requests" },
+    { name = "shortuuid" },
+]
+
+[package.optional-dependencies]
+dev = [
+    { name = "django-extensions" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "adrf", specifier = ">=0.1.11" },
+    { name = "celery", extras = ["redis"], specifier = ">=5.5.3" },
+    { name = "cryptography", specifier = ">=43.0.0" },
+    { name = "daphne", specifier = ">=4.2.1" },
+    { name = "django", specifier = ">=5.2.7" },
+    { name = "django-celery-beat", specifier = ">=2.8.1" },
+    { name = "django-celery-results", specifier = ">=2.6.0" },
+    { name = "django-constance", extras = ["redis"], specifier = ">=4.3.2" },
+    { name = "django-cors-headers", specifier = ">=4.9.0" },
+    { name = "django-extensions", marker = "extra == 'dev'", specifier = ">=4.1" },
+    { name = "django-filter", specifier = ">=25.2" },
+    { name = "django-import-export", specifier = ">=4.3.12" },
+    { name = "django-oss-storage", specifier = ">=1.1.1" },
+    { name = "django-simple-history", specifier = ">=3.10.1" },
+    { name = "django-unfold", specifier = ">=0.67.0" },
+    { name = "djangorestframework", specifier = ">=3.16.1" },
+    { name = "djangorestframework-simplejwt", specifier = ">=5.3.1" },
+    { name = "drf-nested-routers", specifier = ">=0.95.0" },
+    { name = "flower", specifier = ">=2.0.1" },
+    { name = "gevent", specifier = ">=24.2.1" },
+    { name = "gunicorn", specifier = ">=21.2.0" },
+    { name = "psycopg", specifier = ">=3.2.9" },
+    { name = "requests", specifier = ">=2.32.5" },
+    { name = "shortuuid", specifier = ">=1.0.13" },
+]
+provides-extras = ["dev"]
+
+[[package]]
 name = "crcmod"
 version = "1.7"
 source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }
@@ -686,73 +753,6 @@ sdist = { url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/packages/a8/11/41
 wheels = [
     { url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/packages/6e/c2/e9854a3438cfc80891ab4d3826b7c61a0fe5ba3a4da89104a8f5c9afb5df/django_simple_history-3.11.0-py3-none-any.whl", hash = "sha256:f3c298db49e418ffce7fb709a5e83108452ea2179ec5c4b9232484c25427192a", size = 81868, upload-time = "2025-12-11T13:50:53.71Z" },
 ]
-
-[[package]]
-name = "django-startup-kit"
-version = "0.1.0"
-source = { editable = "." }
-dependencies = [
-    { name = "adrf" },
-    { name = "celery", extra = ["redis"] },
-    { name = "cryptography" },
-    { name = "daphne" },
-    { name = "django", version = "5.2.14", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version < '3.12'" },
-    { name = "django", version = "6.0.5", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "django-celery-beat" },
-    { name = "django-celery-results" },
-    { name = "django-constance", extra = ["redis"] },
-    { name = "django-cors-headers" },
-    { name = "django-filter" },
-    { name = "django-import-export" },
-    { name = "django-oss-storage" },
-    { name = "django-simple-history" },
-    { name = "django-unfold", version = "0.81.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version < '3.11'" },
-    { name = "django-unfold", version = "0.91.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version == '3.11.*'" },
-    { name = "django-unfold", version = "0.94.0", source = { registry = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple" }, marker = "python_full_version >= '3.12'" },
-    { name = "djangorestframework" },
-    { name = "djangorestframework-simplejwt" },
-    { name = "drf-nested-routers" },
-    { name = "flower" },
-    { name = "gevent" },
-    { name = "gunicorn" },
-    { name = "psycopg" },
-    { name = "requests" },
-    { name = "shortuuid" },
-]
-
-[package.optional-dependencies]
-dev = [
-    { name = "django-extensions" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "adrf", specifier = ">=0.1.11" },
-    { name = "celery", extras = ["redis"], specifier = ">=5.5.3" },
-    { name = "cryptography", specifier = ">=43.0.0" },
-    { name = "daphne", specifier = ">=4.2.1" },
-    { name = "django", specifier = ">=5.2.7" },
-    { name = "django-celery-beat", specifier = ">=2.8.1" },
-    { name = "django-celery-results", specifier = ">=2.6.0" },
-    { name = "django-constance", extras = ["redis"], specifier = ">=4.3.2" },
-    { name = "django-cors-headers", specifier = ">=4.9.0" },
-    { name = "django-extensions", marker = "extra == 'dev'", specifier = ">=4.1" },
-    { name = "django-filter", specifier = ">=25.2" },
-    { name = "django-import-export", specifier = ">=4.3.12" },
-    { name = "django-oss-storage", specifier = ">=1.1.1" },
-    { name = "django-simple-history", specifier = ">=3.10.1" },
-    { name = "django-unfold", specifier = ">=0.67.0" },
-    { name = "djangorestframework", specifier = ">=3.16.1" },
-    { name = "djangorestframework-simplejwt", specifier = ">=5.3.1" },
-    { name = "drf-nested-routers", specifier = ">=0.95.0" },
-    { name = "flower", specifier = ">=2.0.1" },
-    { name = "gevent", specifier = ">=24.2.1" },
-    { name = "gunicorn", specifier = ">=21.2.0" },
-    { name = "psycopg", specifier = ">=3.2.9" },
-    { name = "requests", specifier = ">=2.32.5" },
-    { name = "shortuuid", specifier = ">=1.0.13" },
-]
-provides-extras = ["dev"]
 
 [[package]]
 name = "django-timezone-field"
