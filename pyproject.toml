@@ -1,0 +1,52 @@
+[project]
+name = "django-startup-kit"
+version = "0.1.0"
+description = "Django Startup Kit - 一个现代化的 Django 项目初始化模板"
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+readme = "README.md"
+requires-python = ">=3.10,<3.14"
+dependencies = [
+    "django>=5.2.7",
+    "daphne>=4.2.1",
+    "adrf>=0.1.11",
+    "django-unfold>=0.67.0",
+    "djangorestframework>=3.16.1",
+    "djangorestframework-simplejwt>=5.3.1",
+    "django-filter>=25.2",
+    "django-cors-headers>=4.9.0",
+    "django-constance[redis]>=4.3.2",
+    "django-celery-results>=2.6.0",
+    "django-celery-beat>=2.8.1",
+    "django-simple-history>=3.10.1",
+    "celery[redis]>=5.5.3",
+    "flower>=2.0.1",
+    "shortuuid>=1.0.13",
+    "drf-nested-routers>=0.95.0",
+    "django-oss-storage>=1.1.1",
+    "gunicorn>=21.2.0",
+    "gevent>=24.2.1",
+    "psycopg>=3.2.9",
+]
+
+[project.optional-dependencies]
+dev = [
+    "django-extensions>=4.1",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["project_name", "asset"]
+
+[tool.hatch.build.targets.wheel.force-include]
+"project_name/static" = "project_name/static"
+
+[tool.uv]
+index-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"
+
+[tool.uv.pip]
+index-url = "https://mirrors.tuna.tsinghua.edu.cn/pypi/web/simple"

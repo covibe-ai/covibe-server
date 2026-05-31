@@ -1,0 +1,23 @@
+/* After modifing this file, please run:
+* npx @tailwindcss/cli -i static/css/styles.srccss -o ./static/css/styles.min.css --minify
+* To generate styles.min.css
+* before that, run npm install tailwindcss @tailwindcss/cli to install the toolchains
+*/
+
+@import 'tailwindcss';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.font-sans {
+    font-family: -apple-system, BlinkMacSystemFont, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", "Source Han Sans SC", "Noto Sans CJK SC", "WenQuanYi Micro Hei", sans-serif;
+}
+
+.editorjs-widget-container h1 { @apply text-4xl font-bold }
+.editorjs-widget-container h2 { @apply text-3xl font-semibold }
+.editorjs-widget-container h3 { @apply text-2xl font-semibold }
+.editorjs-widget-container h4 { @apply text-xl font-medium }
+.editorjs-widget-container h5 { @apply text-lg font-medium }
+.editorjs-widget-container h6 { @apply text-base font-medium}
+
