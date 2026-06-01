@@ -18,7 +18,11 @@ class UserSerializer(serializers.ModelSerializer):
         ]
 
     def get_tier(self, obj):
-        sub = obj.subscriptions.filter(is_active=True).first()
+        from django.utils import timezone
+        now = timezone.now()
+        sub = obj.subscriptions.filter(
+            started_at__lte=now, expired_at__gte=now
+        ).select_related('tier').first()
         if not sub:
             return None
         return {
