@@ -124,6 +124,9 @@ class Subscription(BaseModel):
         - 只能购买同级或更高级；低级 → 拒绝（调用方拦截）
         - 同级：不折抵，延长原有 expired_at
         - 更高级：旧会员立即到期，新会员立即生效 + 送 1 天
+          - 终止所有 expired_at > now 的旧记录（含 future 续费）
+          - 折抵 = 所有终止记录的剩余价值之和
+          - 未来续费记录（started_at > now）：全额折抵
         - 旧记录保留不动（历史追溯用）
         
         Returns:
@@ -146,18 +149,30 @@ class Subscription(BaseModel):
                     paid_amount_minor=amount_minor,
                 ), active
             else:
-                # 更高级：旧会员立即到期，新会员立即生效 + 送 1 天
-                active.expired_at = now
-                active.save(update_fields=["expired_at", "updated_at"])
+                # 更高级：终止所有未过期记录，新记录立即生效
+                # 找出所有 expired_at > now 的记录（含当前 active 和 future 续费）
+                all_active = cls.objects.filter(
+                    user=user, expired_at__gte=now
+                ).select_related('tier')
+
+                total_remaining_minor = 0
+                for sub in all_active:
+                    remaining_days = (sub.expired_at - max(sub.started_at, now)).days
+                    if remaining_days > 0:
+                        daily_rate = sub.tier.price_per_month_minor / 30
+                        total_remaining_minor += int(remaining_days * daily_rate)
+                    # 截断到 now
+                    sub.expired_at = now
+                    sub.save(update_fields=["expired_at", "updated_at"])
+
                 new_start = now
-                new_end = now + timezone.timedelta(days=days + 1)  # +1 赠送当天
+                new_end = now + timezone.timedelta(days=days + 1)
                 return cls.objects.create(
                     user=user, tier=tier,
                     started_at=new_start, expired_at=new_end,
                     paid_amount_minor=amount_minor,
                 ), active
         else:
-            # 无旧会员：新建
             new_start = now
             new_end = now + timezone.timedelta(days=days)
             return cls.objects.create(
