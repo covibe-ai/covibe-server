@@ -147,7 +147,8 @@ class Subscription(BaseModel):
                 ), active
             else:
                 # 更高级：旧会员立即到期，新会员立即生效 + 送 1 天
-                # active 记录保留（但 expired_at < now 就不再 active）
+                active.expired_at = now
+                active.save(update_fields=["expired_at", "updated_at"])
                 new_start = now
                 new_end = now + timezone.timedelta(days=days + 1)  # +1 赠送当天
                 return cls.objects.create(
