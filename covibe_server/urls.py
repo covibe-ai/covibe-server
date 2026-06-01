@@ -14,6 +14,6 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('healthcheck/', healthcheck, name='healthcheck'),
     path('admin/', admin.site.urls),
-    path('api/v1/', include(api_urlpatterns)),
+    path('covibe_api/v1/', include(api_urlpatterns)),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
