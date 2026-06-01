@@ -5,26 +5,23 @@ User = get_user_model()
 
 
 class UserSerializer(serializers.ModelSerializer):
-    tier_name = serializers.SerializerMethodField()
-    tier_display = serializers.SerializerMethodField()
+    tier = serializers.SerializerMethodField()
 
     class Meta:
         model = User
         fields = [
-            'uuid', 'email', 'nickname', 'avatar',
+            'uuid', 'email', 'phone', 'nickname', 'avatar',
             'effective_max_sessions', 'effective_max_workspaces',
             'effective_idle_minutes',
-            'tier_name', 'tier_display',
+            'tier',
             'is_active', 'date_joined',
         ]
 
-    def get_tier_name(self, obj):
+    def get_tier(self, obj):
         sub = obj.subscriptions.filter(is_active=True).first()
-        return sub.tier.name if sub else None
-
-    def get_tier_display(self, obj):
-        sub = obj.subscriptions.filter(is_active=True).first()
+        if not sub:
+            return None
         return {
             'name': sub.tier.name,
-            'expired_at': sub.expired_at.isoformat() if sub and sub.expired_at else None,
-        } if sub else None
+            'expired_at': sub.expired_at.isoformat(),
+        }
