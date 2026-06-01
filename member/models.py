@@ -2,6 +2,7 @@ from datetime import timezone
 
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from covibe_server.models import BaseModel
@@ -56,7 +57,6 @@ class MemberTier(BaseModel):
         return self.name
 
     def save(self, *args, **kwargs):
-        # 确保只有一个默认等级
         if self.is_default:
             MemberTier.objects.filter(is_default=True).exclude(
                 uuid=self.uuid if self.uuid else ''
@@ -65,7 +65,16 @@ class MemberTier(BaseModel):
 
 
 class Subscription(BaseModel):
-    """用户订阅记录。"""
+    """用户订阅记录。
+    
+    购买逻辑（在 payment 履约时调用）：
+    1. 查找当前用户的 active subscription（started_at <= now <= expired_at）
+    2. 如果存在：延长 expired_at（不删除旧的，两个记录都保留，但只有一个 active）
+    3. 如果不存在：创建新的 subscription（started_at=now, expired_at=now+天数）
+    4. 折抵计算：剩余天数 = (old.expired_at - now).days
+                折抵金额 = 剩余天数 * (old.tier.price / 30)
+                新金额 = max(0, 新价格 - 折抵金额)
+    """
 
     user = models.ForeignKey(
         User,
@@ -104,6 +113,35 @@ class Subscription(BaseModel):
 
     @property
     def is_active(self) -> bool:
-        """订阅是否在有效期内。"""
         now = timezone.now()
         return self.started_at <= now <= self.expired_at
+
+    @classmethod
+    def extend_or_create(cls, user, tier, days: int, amount_minor: int):
+        """购买会员：延长现有订阅或创建新订阅。"""
+        now = timezone.now()
+        active = cls.objects.filter(
+            user=user, started_at__lte=now, expired_at__gte=now
+        ).first()
+
+        if active:
+            # 延长：保留旧记录，创建新合并记录
+            new_start = active.expired_at
+            new_end = active.expired_at + timezone.timedelta(days=days)
+            return cls.objects.create(
+                user=user,
+                tier=tier,
+                started_at=new_start,
+                expired_at=new_end,
+                paid_amount_minor=amount_minor,
+            ), active  # 旧记录保留，但不再是 active
+        else:
+            new_start = now
+            new_end = now + timezone.timedelta(days=days)
+            return cls.objects.create(
+                user=user,
+                tier=tier,
+                started_at=new_start,
+                expired_at=new_end,
+                paid_amount_minor=amount_minor,
+            ), None

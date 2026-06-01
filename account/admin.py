@@ -6,9 +6,19 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 
 from covibe_server.admin import BaseModelAdmin, BaseTabularInline
 
-from .models import WeixinUser
+from .models import SocialLogin, WeixinUser
 
 User = get_user_model()
+
+
+class SocialLoginInline(BaseTabularInline):
+    model = SocialLogin
+    extra = 0
+    max_num = 10
+    fields = ('provider', 'sub', 'username', 'avatar_url', 'uuid', 'created_at')
+    readonly_fields = ('uuid', 'created_at')
+    verbose_name = _('第三方登录')
+    verbose_name_plural = _('第三方登录')
 
 
 class WeixinUserInline(BaseTabularInline):
@@ -31,20 +41,16 @@ class UserAdmin(BaseUserAdmin, BaseModelAdmin):
     change_password_form = AdminPasswordChangeForm
 
     list_display = (
-        'email', 'nickname', 'is_active', 'is_staff', 'created_at',
+        'email', 'phone', 'nickname', 'is_active', 'is_staff', 'created_at',
     )
     list_filter = ('is_active', 'is_staff', 'is_superuser')
-    search_fields = ('email', 'nickname', 'oidc_sub', 'uuid')
+    search_fields = ('email', 'phone', 'nickname', 'uuid')
     ordering = ('-created_at',)
     list_filter_submit = True
 
     fieldsets = (
-        (None, {'fields': ('email', 'password')}),
-        (_('个人信息'), {'fields': ('nickname', 'avatar')}),
-        (_('OIDC 认证'), {
-            'fields': ('oidc_sub', 'oidc_issuer', 'oidc_provider'),
-            'classes': ('collapse',),
-        }),
+        (None, {'fields': ('email', 'phone', 'password')}),
+        (_('个人信息'), {'fields': ('nickname', 'avatar', 'phone_verified')}),
         (_('额度覆盖'), {
             'fields': ('max_sessions_override', 'max_workspaces_override'),
             'classes': ('collapse',),
@@ -67,10 +73,16 @@ class UserAdmin(BaseUserAdmin, BaseModelAdmin):
         }),
     )
 
-    inlines = [WeixinUserInline]
+    inlines = [SocialLoginInline, WeixinUserInline]
 
-    def get_queryset(self, request):
-        return super().get_queryset(request).select_related('tier')
+
+@admin.register(SocialLogin)
+class SocialLoginAdmin(BaseModelAdmin):
+    list_display = ('uuid', 'user', 'provider', 'sub', 'username', 'created_at')
+    search_fields = ('provider', 'sub', 'username', 'user__email', 'user__nickname')
+    list_filter = ('provider',)
+    autocomplete_fields = ('user',)
+    raw_id_fields = ('user',)
 
 
 @admin.register(WeixinUser)
