@@ -443,7 +443,8 @@ class BaseModel(models.Model):
 
 ```python
 # urls.py
-path('api/v1/', include(api_urlpatterns)),
+path('covibe_api/v1/', include(api_urlpatterns)),
+    path('covibe_api/v1/auth/', include('account.urls')),
 
 # api_urls.py — 使用 nested router，便于资源嵌套
 router = routers.DefaultRouter()
@@ -486,7 +487,7 @@ router = routers.DefaultRouter()
 
 **移除**
 
-- 删 `api_urls.py` 及 `urls.py` 中的 `api/v1/` 路由。
+- 删 `api_urls.py` 及 `urls.py` 中的 `covibe_api/v1/` 路由。
 - 从 `INSTALLED_APPS` 去掉 `rest_framework*`、`django_filters`、`corsheaders`。
 - 删 `rest_framework.py`、`simplejwt.py`。
 
@@ -730,9 +731,9 @@ class Image(S3FileMixin):
 
 | 方法 | 路径 | 说明 |
 |------|------|------|
-| POST | `/api/v1/orders/` | 创建订单 |
-| POST | `/api/v1/orders/{uuid}/pay/wechat/prepay/` | 微信预下单 |
-| POST | `/api/v1/orders/{uuid}/check_payment/` | 主动查单 |
+| POST | `/covibe_api/v1/orders/` | 创建订单 |
+| POST | `/covibe_api/v1/orders/{uuid}/pay/wechat/prepay/` | 微信预下单 |
+| POST | `/covibe_api/v1/orders/{uuid}/check_payment/` | 主动查单 |
 
 **移除**
 
@@ -776,9 +777,9 @@ class Image(S3FileMixin):
 | 能力 | 实现 |
 |------|------|
 | JSAPI / Native 预下单 | `WechatOrder.create_prepay()` |
-| 支付回调 | `POST /api/v1/payments/wechat/pay/notify/` |
+| 支付回调 | `POST /covibe_api/v1/payments/wechat/pay/notify/` |
 | 退款 API | `WechatAPI.create_refund()` |
-| 退款回调 | `POST /api/v1/payments/wechat/refund/notify/`（验签解密，业务流待扩展） |
+| 退款回调 | `POST /covibe_api/v1/payments/wechat/refund/notify/`（验签解密，业务流待扩展） |
 | 主动查单 / 关单 | `query_and_sync_pay_result()` / `close_pay_transaction()` |
 | Admin | 查单、重新预下单、Native 二维码 JS |
 

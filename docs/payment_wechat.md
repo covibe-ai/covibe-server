@@ -23,11 +23,11 @@
 
 ## 2. 对外接口
 
-前缀：`/api/v1/`
+前缀：`/covibe_api/v1/`
 
 ## 创建微信预支付
 
-- **路径**: `POST /api/v1/orders/{id}/pay/wechat/prepay/`
+- **路径**: `POST /covibe_api/v1/orders/{id}/pay/wechat/prepay/`
 - **认证**: 必填
 
 ### 返回体（统一）
@@ -55,7 +55,7 @@
 
 ## 支付回调通知
 
-- **路径**: `POST /api/v1/payments/wechat/pay/notify/`
+- **路径**: `POST /covibe_api/v1/payments/wechat/pay/notify/`
 - **认证**: 无（微信服务端回调）
 
 ### 处理逻辑
@@ -75,7 +75,7 @@
 
 ## 退款回调通知（占位）
 
-- **路径**: `POST /api/v1/payments/wechat/refund/notify/`
+- **路径**: `POST /covibe_api/v1/payments/wechat/refund/notify/`
 - **认证**: 无
 - **状态**: 当前仅做验签与解密通路，退款业务状态机待补完。
 

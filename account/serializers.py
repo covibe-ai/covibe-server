@@ -12,7 +12,6 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = [
             'uuid', 'email', 'nickname', 'avatar',
-            'oidc_sub', 'oidc_issuer', 'oidc_provider',
             'effective_max_sessions', 'effective_max_workspaces',
             'effective_idle_minutes',
             'tier_name', 'tier_display',
