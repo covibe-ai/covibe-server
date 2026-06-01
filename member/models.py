@@ -68,12 +68,12 @@ class Subscription(BaseModel):
     """用户订阅记录。
     
     购买逻辑（在 payment 履约时调用）：
-    1. 查找当前用户的 active subscription（started_at <= now <= expired_at）
-    2. 如果存在：延长 expired_at（不删除旧的，两个记录都保留，但只有一个 active）
-    3. 如果不存在：创建新的 subscription（started_at=now, expired_at=now+天数）
-    4. 折抵计算：剩余天数 = (old.expired_at - now).days
-                折抵金额 = 剩余天数 * (old.tier.price / 30)
-                新金额 = max(0, 新价格 - 折抵金额)
+    1. 查找当前 active subscription
+    2. 同级（续购）：不折抵，新记录接续旧 expired_at，旧记录不变
+    3. 升级：旧记录 expired_at 截断到 now，新记录立即生效 + 送 1 天
+       折抵 = 剩余天数 × (旧等级月费 / 30)
+       新金额 = max(0, 新价格 - 折抵)
+    4. 无旧会员：新建，从 now 开始
     """
 
     user = models.ForeignKey(
